@@ -11,6 +11,7 @@
 import Toolbar from './Toolbar.vue'
 import Config from '../Config.js'
 import File from '../common/Files.js'
+
 export default {
   components: { Toolbar },
 
@@ -44,16 +45,16 @@ export default {
 
   events: {
     'Bold' () {
-      this.content += 'bold'
+      this.file.content += 'bold'
     },
     'Italic' () {
-      this.content += 'italic'
+      this.file.content += 'italic'
     },
     'Quote' () {
-      this.content += 'quote'
+      this.file.content += 'quote'
     },
     'Title' () {
-      this.content += 'title'
+      this.file.content += 'title'
     },
     'Save' () {
       this.save()

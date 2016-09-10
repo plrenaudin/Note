@@ -10,7 +10,7 @@ import Explorer from './components/Explorer.vue'
 import Editor from './components/Editor.vue'
 
 export default {
-  components: {Explorer,Editor},
+  components: {Explorer, Editor},
 
   data () {
     return {
