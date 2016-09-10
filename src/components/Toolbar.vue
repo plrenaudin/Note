@@ -9,7 +9,9 @@
 </template>
 
 <script>
+import EventBus from '../common/EventBus.js'
 export default {
+
   data () {
     return {
       actions:['Bold','Italic','Title','Quote','Save']
@@ -17,7 +19,7 @@ export default {
   },
   methods: {
     dispatch (action) {
-      this.$dispatch(action);
+      EventBus.$emit(action.toLowerCase());
     }
   }
 }

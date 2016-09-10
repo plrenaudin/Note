@@ -10,31 +10,7 @@ import Explorer from './components/Explorer.vue'
 import Editor from './components/Editor.vue'
 
 export default {
-  components: {Explorer, Editor},
-
-  data () {
-    return {
-      msg: 'World'
-    }
-  },
-
-  events: {
-    'Saved' () {
-      this.$refs.explorer.reloadItems()
-    },
-    'Deleted' () {
-      this.$refs.explorer.reloadItems()
-    },
-    'Load' (id) {
-      this.$refs.editor.load(id)
-    },
-    'Delete' (id) {
-      this.$refs.editor.deleteFile(id)
-    },
-    'Create' () {
-      this.$refs.editor.create()
-    }
-  }
+  components: {Explorer, Editor}
 }
 </script>
 

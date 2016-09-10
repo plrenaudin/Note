@@ -9,8 +9,8 @@
 
 <script>
 import Toolbar from './Toolbar.vue'
-import Config from '../Config.js'
 import File from '../common/Files.js'
+import EventBus from '../common/EventBus.js'
 
 export default {
   components: { Toolbar },
@@ -23,7 +23,7 @@ export default {
 
     save () {
       File.save(this.file)
-      this.$dispatch('Saved')
+      EventBus.$emit('saved')
     },
 
     load (id) {
@@ -35,31 +35,25 @@ export default {
       if(this.file.id === id) {
         this.file = File.openFirst().file
       }
-      this.$dispatch('Deleted')
+      EventBus.$emit('deleted')
     }
+  },
+
+  created () {
+    EventBus.$on('bold', () => {this.file.content += 'bold'})
+    EventBus.$on('italic', () => {this.file.content += 'Italic'})
+    EventBus.$on('quote', () => {this.file.content += 'Quote'})
+    EventBus.$on('title', () => {this.file.content += 'Title'})
+    EventBus.$on('create', () => {this.create()})
+    EventBus.$on('save', () => {this.save()})
+    EventBus.$on('load', (id) => {this.load(id)})
+    EventBus.$on('delete', (id) => {this.deleteFile(id)})
   },
 
   data () {
     return File.openFirst()
   },
 
-  events: {
-    'Bold' () {
-      this.file.content += 'bold'
-    },
-    'Italic' () {
-      this.file.content += 'italic'
-    },
-    'Quote' () {
-      this.file.content += 'quote'
-    },
-    'Title' () {
-      this.file.content += 'title'
-    },
-    'Save' () {
-      this.save()
-    }
-  }
 }
 </script>
 

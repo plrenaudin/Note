@@ -12,34 +12,33 @@
 
 <script>
   import Config from '../Config.js'
+  import EventBus from '../common/EventBus.js'
 
   export default {
     methods: {
-      select(id) {
-        alert('selected',id);
-      },
       load(id) {
-        this.$dispatch('Load', id)
+        EventBus.$emit('load', id)
       },
       deleteFile(id) {
-        this.$dispatch('Delete', id)
+        EventBus.$emit('delete', id)
       },
       create () {
-        this.$dispatch('Create')
+        EventBus.$emit('create')
       },
       reloadItems() {
         this.items = JSON.parse(localStorage.getItem(Config.STORAGE_KEY))
       }
     },
-    data () {
+
+    created () {
+      EventBus.$on('saved', () => {this.reloadItems()})
+      EventBus.$on('deleted', () => {this.reloadItems()})
       this.reloadItems()
+    },
+
+    data () {
       return {
         items : this.items
-      }
-    },
-    events: {
-      'Saved' () {
-        this.reloadItems()
       }
     }
   }
