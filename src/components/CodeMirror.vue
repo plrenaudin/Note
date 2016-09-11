@@ -51,11 +51,8 @@ export default {
     },
 
     onPaste (e) {
-      e.stopPropagation()
-      e.preventDefault()
-      console.log('init')
-      var pasteText = e.clipboardData.getData('Text')
-      console.log('paste', pasteText)
+      var pastedText = e.clipboardData.getData('Text')
+      console.log('paste', pastedText)
     }
   }
 }
