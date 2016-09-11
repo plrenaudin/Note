@@ -78,7 +78,7 @@ export default {
         text-align: center;
       }
       &:hover {
-        background-color: $grey;
+        background-color: rgba( $dark-grey, .2 );
         border-radius: 5px 0 0 5px;
       }
       &.selected {
@@ -86,7 +86,7 @@ export default {
         color: $white;
         background-color: $dark-grey;
         border-radius: 5px 0 0 5px;
-        box-shadow: 0 2px 5px 0 $orange;
+        box-shadow: $box-shadow;
       }
     }
   }

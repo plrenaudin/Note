@@ -73,7 +73,7 @@ export default {
 
   .editorContent {
     background-color: $dark-grey;
-    box-shadow: 0 2px 5px 0 $orange;
+    box-shadow: $box-shadow;
   }
 
   .titleInput {
