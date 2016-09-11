@@ -2,50 +2,18 @@
   <div class="editorContainer">
     <input type="hidden" v-model="file.id" />
     <input type="text" class="titleInput" v-model="file.title" />
-    <codemirror class="editor" :model.sync="file.content"></codemirror>
+    <codemirror class="editorContent" v-ref:cm :model.sync="file"></codemirror>
   </div>
 </template>
 
 <script>
 import File from '../common/Files.js'
 import EventBus from '../common/EventBus.js'
-import * as CodeMirror from 'codemirror'
-import gfm from '../../node_modules/codemirror/mode/gfm/gfm.js'
+import CodeMirror from './CodeMirror.vue'
 
 export default {
-  components: {
-    codemirror: {
-      replace: false,
-      props: ['model'],
-      ready: function () {
-        this.$nextTick(this.initCodeMirror);
-      },
-      methods: {
-        initCodeMirror: function() {
-          var vm = this;
+  components: { 'codemirror': CodeMirror },
 
-          var cm = CodeMirror.default(vm.$el, {
-              mode: 'gfm',
-              lineNumbers: true,
-              extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
-          });
-
-          cm.on('change', function() {
-              vm.$set('model', cm.getValue());
-              // Add { silent: true }  as 3rd arg?
-          });
-
-          // Set the initial value
-          cm.setValue(vm.model);
-
-          this.$watch('model', function(value) {
-              if (value !== cm.getValue())
-                cm.setValue(value);
-          });
-        }
-      }
-    }
-  },
   methods: {
     create() {
       this.file = File.create().file
@@ -69,23 +37,25 @@ export default {
       EventBus.$emit('deleted', id)
     },
 
-    listen(e) {
+    listenOnKeyDown (e) {
       if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault()
         this.save()
       }
+    },
+
+    initEditor () {
+      EventBus.$on('create', () => {this.create()})
+      EventBus.$on('save', () => {this.save()})
+      EventBus.$on('load', (id) => {this.load(id)})
+      EventBus.$on('delete', (id) => {this.deleteFile(id)})
+      document.addEventListener("keydown", this.listenOnKeyDown, false)
     }
+
   },
 
-  created () {
-    EventBus.$on('create', () => {this.create()})
-    EventBus.$on('save', () => {this.save()})
-    EventBus.$on('load', (id) => {this.load(id)})
-    EventBus.$on('delete', (id) => {this.deleteFile(id)})
-  },
-
-  attached () {
-    document.addEventListener("keydown", this.listen, false);
+  ready () {
+    this.$nextTick(this.initEditor);
   },
 
   data () {
@@ -94,8 +64,7 @@ export default {
 }
 </script>
 
-<style scoped>
-  @import url('../../node_modules/codemirror/lib/codemirror.css');
+<style lang="sass" scoped>
   .editorContainer {
     display: flex;
     flex-direction: column;
@@ -104,10 +73,5 @@ export default {
   .titleInput {
     height: 25px;
     margin: 10px 0;
-  }
-
-  .editor {
-    flex-grow: 1;
-    height: 100%;
   }
 </style>

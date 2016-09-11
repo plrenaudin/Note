@@ -2,8 +2,10 @@
   <div class="folders">
     <ul>
       <li v-for="item in items" v-on:click="load(item.file.id)" :class="item.file.id === currentId ? 'selected' : ''">
-        {{item.file.title}}
-        <a href="#" v-on:click="deleteFile(item.file.id)">X</a>
+        <a href="#" v-on:click="deleteFile(item.file.id)">
+          X
+        </a>
+        <span>{{item.file.title}}</span>
       </li>
       <li><a href="#" v-on:click="create">Add</a></li>
     </ul>
@@ -55,9 +57,16 @@ export default {
 
 <style lang="sass" scoped>
   ul {
+    margin-top: 60px;
     list-style-type: none;
     li {
       cursor: pointer;
+      padding: 5px 10px;
+      text-align: right;
+      span {
+        display: inline-block;
+        width: 80%;
+      }
       &.selected {
         font-weight: bold;
       }

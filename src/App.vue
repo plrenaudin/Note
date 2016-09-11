@@ -18,14 +18,16 @@ export default {
   .body {
     display: flex;
     height: 100%;
+    align-items: stretch;
+    font-family: Helvetica, Arial, Sans-Serif;
   }
 
   .explorer {
-    width: 250px;
+    flex: 0 0 250px;
   }
 
   .editor {
-    flex-grow: 1;
     height: 100%;
+    flex: 0 0 80%;
   }
 </style>
