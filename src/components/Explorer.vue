@@ -30,7 +30,8 @@ export default {
     },
     reloadItems() {
       this.items = JSON.parse(localStorage.getItem(Config.STORAGE_KEY))
-      if (this.currentId === 0) this.currentId = this.items[0].file.id
+
+      if (this.currentId === 0) this.currentId = this.items ? this.items[0].file.id : ''
     }
   },
 

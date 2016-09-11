@@ -12,12 +12,12 @@ describe('App.vue', () => {
     }).$mount()
   });
   it('should render the explorer', () => {
-    expect(vm.$el.querySelector('.explorer ul li').textContent).toBe('Add')
+    expect(vm.$el.querySelectorAll('.explorer li').length).toBe(1)
   })
   it('should render the editor title input', () => {
     expect(vm.$el.querySelectorAll('.editor input.titleInput').length).toBe(1)
   })
-  it('should render the editor textarea', () => {
-    expect(vm.$el.querySelectorAll('.editor textarea').length).toBe(1)
+  it('should render the editor', () => {
+    expect(vm.$el.querySelectorAll('.editorContent').length).toBe(1)
   })
 })
