@@ -23,7 +23,7 @@ export default {
 
     save () {
       File.save(this.file)
-      EventBus.$emit('saved')
+      EventBus.$emit('saved', this.file.id)
     },
 
     load (id) {
@@ -35,7 +35,7 @@ export default {
       if(this.file.id === id) {
         this.file = File.openFirst().file
       }
-      EventBus.$emit('deleted')
+      EventBus.$emit('deleted', id)
     }
   },
 
