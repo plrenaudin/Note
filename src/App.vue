@@ -14,14 +14,20 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
+  @import url('../node_modules/font-awesome/css/font-awesome.min.css');
+  @import './common/styles.scss';
   .body {
     display: flex;
     height: 100%;
+    background-color: $white;
     align-items: stretch;
     font-family: Helvetica, Arial, Sans-Serif;
   }
-
+  a {
+    text-decoration:none;
+    color: $blue;
+  }
   .explorer {
     flex: 0 0 250px;
   }

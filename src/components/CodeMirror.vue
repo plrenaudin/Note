@@ -22,7 +22,8 @@ export default {
 
       var cm = CodeMirror.default(vm.$el, {
           mode: 'gfm',
-          lineNumbers: true,
+          theme: 'monokai',
+          lineNumbers:true,
           matchBrackets: true,
           lineWrapping: true,
           extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
@@ -62,7 +63,7 @@ export default {
 
 <style>
   @import url('../../node_modules/codemirror/lib/codemirror.css');
-  @import url('../../node_modules/highlight.js/styles/default.css');
+  @import url('../../node_modules/codemirror/theme/monokai.css');
   .CodeMirror {
     min-height: 80vh;
   }

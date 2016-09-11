@@ -65,13 +65,23 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+  @import '../common/styles.scss';
   .editorContainer {
     display: flex;
     flex-direction: column;
   }
 
+  .editorContent {
+    background-color: $dark-grey;
+    box-shadow: 0 2px 5px 0 $orange;
+  }
+
   .titleInput {
-    height: 25px;
+    background-color: inherit;
+    border:none;
+    padding: 7px 0;
+    font-size: 1.5em;
+    height: 26px;
     margin: 10px 0;
   }
 </style>
