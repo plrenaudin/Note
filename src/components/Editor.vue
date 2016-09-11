@@ -4,12 +4,15 @@
     <input type="text" class="titleInput" v-model="file.title" />
     <codemirror class="editorContent" v-ref:cm :model.sync="file"></codemirror>
   </div>
+  <div class="preview" v-html="file.content | marked"></div>
 </template>
 
 <script>
 import File from '../common/Files.js'
 import EventBus from '../common/EventBus.js'
 import CodeMirror from './CodeMirror.vue'
+import Highlight from 'highlight.js'
+import marked from 'marked'
 
 export default {
   components: { 'codemirror': CodeMirror },
@@ -51,7 +54,15 @@ export default {
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
       document.addEventListener("keydown", this.listenOnKeyDown, false)
     }
+  },
 
+  created () {
+    marked.setOptions({
+      renderer: new marked.Renderer(),
+      highlight (code) {
+        return Highlight.highlightAuto(code).value
+      }
+    })
   },
 
   ready () {
@@ -60,15 +71,21 @@ export default {
 
   data () {
     return File.openFirst()
+  },
+
+  filters: {
+    marked: marked
   }
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
   @import '../common/styles.scss';
+  @import url('../../node_modules/highlight.js/styles/monokai.css');
   .editorContainer {
     display: flex;
     flex-direction: column;
+    width: 50%;
   }
 
   .editorContent {
@@ -84,4 +101,16 @@ export default {
     height: 26px;
     margin: 10px 0;
   }
+
+  .preview {
+    margin-top: 50px;
+    width: 50%;
+    padding: 5px;
+    pre {
+      padding: 10px;
+      color: $white;
+      background-color: $dark-grey;
+    }
+  }
+
 </style>

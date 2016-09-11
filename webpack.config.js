@@ -13,10 +13,6 @@ var loaders = [
   {
     "test": /\.vue?$/,
     "loader": "vue"
-  },
-  {
-    test: /\.css$/,
-    loader: 'style!css?sourceMap'
   }
 ];
 
@@ -25,8 +21,7 @@ module.exports = {
   entry: path.resolve('src', 'main.js'),
   output: {
     path: path.resolve('build'),
-    filename: '[name].js',
-    publicPath: './'
+    filename: '[name].js'
   },
   plugins: [
     new HtmlWebpackPlugin({
