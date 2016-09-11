@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style lang="sass">
-  @import url('../node_modules/font-awesome/css/font-awesome.min.css');
+  @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
   @import './common/styles.scss';
   .body {
     display: flex;

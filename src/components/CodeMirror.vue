@@ -8,7 +8,6 @@
 import EventBus from '../common/EventBus.js'
 import * as CodeMirror from 'codemirror'
 import gfm from '../../node_modules/codemirror/mode/gfm/gfm.js'
-import * as Highlight from 'highlight.js'
 export default {
   props: ['model'],
 
