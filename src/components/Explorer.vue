@@ -1,7 +1,7 @@
 <template>
   <div class="folders">
     <ul>
-      <li v-for="item in items" v-on:click="load(item.file.id)" v-bind:class="item.file.id === currentId ? 'selected' : ''">
+      <li v-for="item in items" v-on:click="load(item.file.id)" :class="item.file.id === currentId ? 'selected' : ''">
         {{item.file.title}}
         <a href="#" v-on:click="deleteFile(item.file.id)">X</a>
       </li>
