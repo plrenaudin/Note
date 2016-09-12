@@ -8,6 +8,7 @@
 import EventBus from '../common/EventBus.js'
 import * as CodeMirror from 'codemirror'
 import gfm from '../../node_modules/codemirror/mode/gfm/gfm.js'
+const codeTag = '\n```\n'
 export default {
   props: ['model'],
 
@@ -19,7 +20,7 @@ export default {
     initCodeMirror: function() {
       var vm = this
 
-      var cm = CodeMirror.default(vm.$el, {
+      vm.cm = CodeMirror.default(vm.$el, {
           mode: 'gfm',
           theme: 'monokai',
           lineNumbers:true,
@@ -27,30 +28,32 @@ export default {
           lineWrapping: true,
           extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
       });
-      cm.on('change', function() {
-          vm.$set('model.content', cm.getValue())
+      vm.cm.on('change', function() {
+          vm.$set('model.content', vm.cm.getValue())
       });
 
       // Set the initial value
-      cm.setValue(vm.model.content)
-      cm.idFileEdit = vm.model.id
-      cm.clearHistory()
+      vm.cm.setValue(vm.model.content)
+      vm.cm.idFileEdit = vm.model.id
+      vm.cm.clearHistory()
 
       this.$watch('model', function(value) {
-        if (value.content !== cm.getValue()) {
-          cm.setValue(value.content)
+        if (value.content !== vm.cm.getValue()) {
+          vm.cm.setValue(value.content)
         }
-        if (!cm.idFileEdit || value.id !== cm.idFileEdit) {
-          cm.clearHistory()
-          cm.idFileEdit = value.id
+        if (!vm.cm.idFileEdit || value.id !== vm.cm.idFileEdit) {
+          vm.cm.clearHistory()
+          vm.cm.idFileEdit = value.id
         }
       });
 
-      document.addEventListener("paste", this.onPaste, false);
+      document.addEventListener("paste", this.onPaste, true);
     },
 
     onPaste (e) {
-      var pastedText = e.clipboardData.getData('Text')
+      e.preventDefault()
+      let pastedText = e.clipboardData.getData('Text')
+      this.cm.replaceSelection(codeTag + pastedText + codeTag)
       console.log('paste', pastedText)
     }
   }
