@@ -48,13 +48,15 @@ export default {
       });
 
       document.addEventListener("paste", this.onPaste, true);
+      vm.cm.focus();
     },
 
     onPaste (e) {
       e.preventDefault()
       let pastedText = e.clipboardData.getData('Text')
-      this.cm.replaceSelection(codeTag + pastedText + codeTag)
-      console.log('paste', pastedText)
+      if (pastedText && pastedText.trim()) {
+        this.cm.replaceSelection(codeTag + pastedText + codeTag)
+      }
     }
   }
 }

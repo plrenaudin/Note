@@ -53,6 +53,7 @@ export default {
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
       document.addEventListener("keydown", this.listenOnKeyDown, false)
+      this.create();
     }
   },
 

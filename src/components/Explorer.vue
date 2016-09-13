@@ -30,27 +30,30 @@ export default {
     },
     reloadItems() {
       this.items = JSON.parse(localStorage.getItem(Config.STORAGE_KEY))
-
-      if (this.currentId === 0) this.currentId = this.items ? this.items[0].file.id : ''
+      if (!this.currentId && this.items && this.items.length > 0) {
+        this.currentId = this.items[0].file.id
+      }
     }
   },
 
   created () {
     EventBus.$on('saved', (id) => {
-      this.reloadItems();
+      this.reloadItems()
       this.currentId = id
     })
+
     EventBus.$on('deleted', (id) => {
-      if (this.currentId=== id) this.currentId = 0
+      if (this.currentId === id) this.currentId = 0
       this.reloadItems()
     })
+
     this.reloadItems()
   },
 
   data () {
     return {
       items : this.items,
-      currentId : 0
+      currentId : null
     }
   }
 }
