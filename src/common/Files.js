@@ -1,69 +1,51 @@
-import Config from '../Config.js'
+import Database from './Database.js'
 
-const generateUUID = function () {
-  var d = new Date().getTime();
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (d + Math.random() * 16) % 16 | 0;
-    d = Math.floor(d / 16);
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-  return uuid;
-}
-
-const loadBook = function() {
-  return JSON.parse(localStorage.getItem(Config.STORAGE_KEY)) || []
-}
-
-const saveBook = function (book) {
-  localStorage.setItem(Config.STORAGE_KEY, [JSON.stringify(book)])
-}
 
 export default {
-  create() {
-    return {
-      file: {
-        title: 'New File',
-        id: generateUUID(),
-        content: ''
+  create(cb) {
+    Database.connect(() => {
+      var file = {
+          title: 'New File',
+          content: ''
       }
-    }
+      cb(Database.get().insert(file))
+    })
   },
 
   save(file) {
-    let book = loadBook()
-    let currentId = file.id
-    let found = book.findIndex(function (item) {
-      return currentId === item.file.id
+    Database.connect(() => {
+      if (file.$loki) {
+        Database.get().update(file)
+      } else {
+        Database.get().insert(file)
+      }
+      Database.save()
     })
-    if (found >= 0) {
-      book[found] = { file: file }
-    } else {
-      book.push({ file: file })
-    }
-    saveBook(book)
   },
 
   load(id) {
-    let book = loadBook()
-    return book.find(function (item) {
-      return item.file.id === id
-    })
+    return Database.get().get(id)
   },
 
   deleteFile(id) {
-    let book = loadBook()
-    book = book.filter(function(item) {
-      return item.file.id !== id
+    Database.connect(() => {
+      Database.get().remove({ "$loki": id })
     })
-    saveBook(book)
   },
 
-  openFirst() {
-    let book = loadBook()
-    if (book && book.length > 0) {
-      return book[0]
-    } else {
-      return this.create()
-    }
+  listAll(cb) {
+    Database.connect(() => {
+      cb(Database.get().find())
+    })
+  },
+
+  openFirst(cb) {
+    Database.connect(() => {
+      if (Database.get().count > 0) {
+        cb(Database.get().find()[0])
+      } else {
+        this.create(cb)
+      }
+    })
   }
 }

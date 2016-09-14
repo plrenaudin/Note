@@ -1,6 +1,6 @@
 <template>
   <div class="editorContainer">
-    <input type="hidden" v-model="file.id" />
+    <input type="hidden" v-model="file.$loki" />
     <input type="text" class="titleInput" v-model="file.title" />
     <codemirror class="editorContent" v-ref:cm :model.sync="file"></codemirror>
   </div>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import File from '../common/Files.js'
+import Files from '../common/Files.js'
 import EventBus from '../common/EventBus.js'
 import CodeMirror from './CodeMirror.vue'
 import Highlight from 'highlight.js'
@@ -19,25 +19,33 @@ export default {
 
   methods: {
     create() {
-      this.file = File.create().file
-      this.save()
+      Files.create((createdFile) => {
+        this.file = createdFile
+        EventBus.$emit('saved', this.file.$loki)
+      })
     },
 
     save () {
-      File.save(this.file)
-      EventBus.$emit('saved', this.file.id)
+      Files.save(this.file)
+      EventBus.$emit('saved', this.file.$loki)
     },
 
     load (id) {
-      this.file = File.load(id).file
+      this.file = Files.load(id)
     },
 
     deleteFile (id) {
-      File.deleteFile(id)
-      if(this.file.id === id) {
-        this.file = File.openFirst().file
+      if(this.file.$loki === id) {
+        Files.openFirst((first) => {
+          this.file = first
+          Files.deleteFile(id)
+          EventBus.$emit('deleted', id)
+        })
+      } else {
+        Files.deleteFile(id)
+        EventBus.$emit('deleted', id)
       }
-      EventBus.$emit('deleted', id)
+
     },
 
     listenOnKeyDown (e) {
@@ -57,7 +65,7 @@ export default {
     }
   },
 
-  created () {
+  init () {
     marked.setOptions({
       renderer: new marked.Renderer(),
       highlight (code) {
@@ -71,7 +79,7 @@ export default {
   },
 
   data () {
-    return File.openFirst()
+    return {file:{title:'',content:''}}
   },
 
   filters: {

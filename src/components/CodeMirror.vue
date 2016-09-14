@@ -34,16 +34,16 @@ export default {
 
       // Set the initial value
       vm.cm.setValue(vm.model.content)
-      vm.cm.idFileEdit = vm.model.id
+      vm.cm.idFileEdit = vm.model.$loki
       vm.cm.clearHistory()
 
       this.$watch('model', function(value) {
         if (value.content !== vm.cm.getValue()) {
           vm.cm.setValue(value.content)
         }
-        if (!vm.cm.idFileEdit || value.id !== vm.cm.idFileEdit) {
+        if (!vm.cm.idFileEdit || value.$loki !== vm.cm.idFileEdit) {
           vm.cm.clearHistory()
-          vm.cm.idFileEdit = value.id
+          vm.cm.idFileEdit = value.$loki
         }
       });
 
