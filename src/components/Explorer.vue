@@ -35,7 +35,6 @@ export default {
     reloadItems() {
       Files.listAll((data) => {
         this.items = data
-        console.log(data)
         if (!this.currentId && this.items && this.items.length > 0) {
           this.currentId = this.items[0].$loki
         }
@@ -49,8 +48,8 @@ export default {
       this.currentId = id
     })
 
-    EventBus.$on('deleted', (id) => {
-      if (this.currentId === id) this.currentId = 0
+    EventBus.$on('select', (id) => {
+      this.currentId = id
       this.reloadItems()
     })
 

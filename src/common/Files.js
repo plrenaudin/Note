@@ -12,14 +12,16 @@ export default {
     })
   },
 
-  save(file) {
+  save(file, cb) {
     Database.connect(() => {
+      let savedFile
       if (file.$loki) {
-        Database.get().update(file)
+        savedFile = Database.get().update(file)
       } else {
-        Database.get().insert(file)
+        savedFile = Database.get().insert(file)
       }
       Database.save()
+      cb(savedFile)
     })
   },
 
@@ -27,9 +29,10 @@ export default {
     return Database.get().get(id)
   },
 
-  deleteFile(id) {
+  deleteFile(id, cb) {
     Database.connect(() => {
       Database.get().remove({ "$loki": id })
+      cb()
     })
   },
 
@@ -41,8 +44,9 @@ export default {
 
   openFirst(cb) {
     Database.connect(() => {
-      if (Database.get().count > 0) {
-        cb(Database.get().find()[0])
+      if (Database.get().count() > 0) {
+        let entry = Database.get().find()[0]
+        cb(entry)
       } else {
         this.create(cb)
       }

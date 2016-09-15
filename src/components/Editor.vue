@@ -26,8 +26,10 @@ export default {
     },
 
     save () {
-      Files.save(this.file)
-      EventBus.$emit('saved', this.file.$loki)
+      Files.save(this.file, (savedFile) => {
+        this.file = savedFile
+        EventBus.$emit('saved', this.file.$loki)
+      })
     },
 
     load (id) {
@@ -35,17 +37,17 @@ export default {
     },
 
     deleteFile (id) {
-      if(this.file.$loki === id) {
-        Files.openFirst((first) => {
-          this.file = first
-          Files.deleteFile(id)
-          EventBus.$emit('deleted', id)
-        })
-      } else {
-        Files.deleteFile(id)
-        EventBus.$emit('deleted', id)
-      }
-
+      let loadFirst = this.file.$loki === id
+      Files.deleteFile(id, () => {
+        if(loadFirst) {
+          Files.openFirst((first) => {
+            this.file = first
+            EventBus.$emit('select', first.$loki)
+          })
+        } else {
+          EventBus.$emit('select', this.file.$loki)
+        }
+      });
     },
 
     listenOnKeyDown (e) {
