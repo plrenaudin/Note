@@ -33,7 +33,9 @@ export default {
     },
 
     load (id) {
-      this.file = Files.load(id)
+      Files.load(id, (loaded) => {
+        this.file = loaded
+      })
     },
 
     deleteFile (id) {

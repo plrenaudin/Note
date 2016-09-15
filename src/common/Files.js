@@ -25,8 +25,10 @@ export default {
     })
   },
 
-  load(id) {
-    return Database.get().get(id)
+  load(id, cb) {
+    Database.connect(() => {
+      cb(Database.get().get(id))
+    })
   },
 
   deleteFile(id, cb) {

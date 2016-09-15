@@ -4,28 +4,37 @@ import loki from 'lokijs'
 
 const idbAdapter = new IndexedAdapter('loki')
 
-var db, started
+var db, started, loading, entries
 
 export default {
   connect(done) {
     if (started) return done()
+    if (loading) {
+      setTimeout(() => { this.connect(done) }, 150)
+      return
+    }
+    loading = true
     db = new loki('book', {
       autosave: true,
+      autoload: true,
+      autoloadCallback : loadHandler,
       autosaveInterval: Config.SAVE_INTERVAL_MS,
       adapter: idbAdapter
     })
-    db.loadDatabase({}, () => {
-      var entries = db.getCollection('entries')
+    function loadHandler() {
+      //create main collection if not exist
+      entries = db.getCollection('entries');
       if (!entries) {
-        entries = db.addCollection('entries')
+        entries = db.addCollection('entries');
       }
       started = true
-      done();
-    })
+      loading = false
+      done()
+    }
   },
 
   get() {
-    return db.getCollection('entries')
+    return entries
   },
 
   save() {
