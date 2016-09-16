@@ -104,6 +104,9 @@ export default {
   .editorContent {
     background-color: $dark-grey;
     box-shadow: $box-shadow;
+    flex: 1;
+    display: flex;
+    align-items: stretch;
   }
 
   .titleInput {

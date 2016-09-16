@@ -66,6 +66,7 @@ export default {
   @import url('../../node_modules/codemirror/lib/codemirror.css');
   @import url('../../node_modules/codemirror/theme/monokai.css');
   .CodeMirror {
-    min-height: 80vh;
+    flex: 1;
+    height: inherit !important;
   }
 </style>
