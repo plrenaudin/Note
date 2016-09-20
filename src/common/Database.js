@@ -1,6 +1,7 @@
 import Config from '../Config.js'
 import IndexedAdapter from 'lokijs/build/loki-indexed-adapter.min.js'
 import loki from 'lokijs'
+import EventBus from '../common/EventBus.js'
 
 const idbAdapter = new IndexedAdapter('loki')
 
@@ -16,11 +17,8 @@ export default {
       return
     }
     loading = true
-    console.log('interval',Config.SAVE_INTERVAL_MS)
     db = new loki('book', {
       autosave: true,
-      autosaveInterval: Config.SAVE_INTERVAL_MS,
-      autosaveCallback : saveHandler,
       autoload: true,
       autoloadCallback : loadHandler,
       adapter: idbAdapter
@@ -34,9 +32,6 @@ export default {
       started = true
       loading = false
       done()
-    }
-    function saveHandler() {
-      console.log('init',arguments)
     }
   },
 

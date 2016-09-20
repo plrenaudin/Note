@@ -22,9 +22,7 @@ export default {
       vm.cm = CodeMirror.default(vm.$el, {
           mode: 'gfm',
           theme: 'monokai',
-          lineNumbers:true,
           matchBrackets: true,
-          lineWrapping: true,
           extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
       });
       vm.cm.on('change', function() {
@@ -70,6 +68,7 @@ export default {
   @import url('../../node_modules/codemirror/theme/monokai.css');
   .CodeMirror {
     flex: 1;
+    padding: 10px;
     height: inherit !important;
   }
 </style>

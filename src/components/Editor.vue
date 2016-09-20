@@ -9,6 +9,7 @@
 
 <script>
 import Files from '../common/Files.js'
+import Config from '../Config.js'
 import EventBus from '../common/EventBus.js'
 import CodeMirror from './CodeMirror.vue'
 import Highlight from 'highlight.js'
@@ -54,7 +55,12 @@ export default {
     },
 
     listenOnKeyDown (e) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(this.save, Config.SAVE_INTERVAL_MS)
       if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        if (this.timer) clearTimeout(this.timer)
         e.preventDefault()
         this.save()
       }
@@ -98,6 +104,7 @@ export default {
   .editorContainer {
     display: flex;
     flex-direction: column;
+    overflow: auto;
     width: 50%;
   }
 
@@ -121,10 +128,12 @@ export default {
   .preview {
     margin-top: 50px;
     width: 50%;
+    overflow: auto;
     padding: 5px;
     pre {
       padding: 10px;
       color: $white;
+      white-space: pre-wrap;
       background-color: $dark-grey;
     }
   }
