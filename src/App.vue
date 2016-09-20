@@ -17,11 +17,12 @@ export default {
 <style lang="sass">
   @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css');
   @import './common/styles.scss';
+  html,body { height: 100%; margin: 0px; padding: 0px; }
   .body {
     display: flex;
-    height: 100%;
     background-color: $white;
     align-items: stretch;
+    min-height: 100%;
     font-family: Helvetica, Arial, Sans-Serif;
   }
   a {

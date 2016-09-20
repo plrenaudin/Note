@@ -1,11 +1,11 @@
 <template>
   <div class="folders">
     <ul>
-      <li v-for="item in items" v-on:click="load(item.file.id)" :class="item.file.id === currentId ? 'selected' : ''">
-        <a href="#" v-on:click="deleteFile(item.file.id)">
+      <li v-for="item in items" v-on:click="load(item.$loki)" :class="item.$loki === currentId ? 'selected' : ''">
+        <a href="#" v-on:click="deleteFile(item.$loki)">
           <i class="fa fa-trash"></i>
         </a>
-        <span>{{item.file.title}}</span>
+        <span>{{item.title}}</span>
       </li>
       <li><a href="#" class="add" v-on:click="create"><i class="fa fa-plus"></i></a></li>
     </ul>
@@ -15,6 +15,7 @@
 <script>
 import Config from '../Config.js'
 import EventBus from '../common/EventBus.js'
+import Files from '../common/Files.js'
 
 export default {
   methods: {
@@ -22,17 +23,22 @@ export default {
       EventBus.$emit('load', id)
       this.currentId = id
     },
+
     deleteFile(id) {
       EventBus.$emit('delete', id)
     },
+
     create () {
       EventBus.$emit('create')
     },
+
     reloadItems() {
-      this.items = JSON.parse(localStorage.getItem(Config.STORAGE_KEY))
-      if (!this.currentId && this.items && this.items.length > 0) {
-        this.currentId = this.items[0].file.id
-      }
+      Files.listAll((data) => {
+        this.items = data
+        if (!this.currentId && this.items && this.items.length > 0) {
+          this.currentId = this.items[0].$loki
+        }
+      })
     }
   },
 
@@ -42,8 +48,8 @@ export default {
       this.currentId = id
     })
 
-    EventBus.$on('deleted', (id) => {
-      if (this.currentId === id) this.currentId = 0
+    EventBus.$on('select', (id) => {
+      this.currentId = id
       this.reloadItems()
     })
 
@@ -52,7 +58,7 @@ export default {
 
   data () {
     return {
-      items : this.items,
+      items : null,
       currentId : null
     }
   }
@@ -77,11 +83,11 @@ export default {
         width: 80%;
       }
       .add {
-        width:100%;
+        width: 100%;
         text-align: center;
       }
       &:hover {
-        background-color: rgba( $dark-grey, .2 );
+        background-color: rgba( $dark-grey, .2);
         border-radius: 5px 0 0 5px;
       }
       &.selected {

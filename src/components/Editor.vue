@@ -1,14 +1,15 @@
 <template>
   <div class="editorContainer">
-    <input type="hidden" v-model="file.id" />
-    <input type="text" class="titleInput" v-model="file.title" />
-    <codemirror class="editorContent" v-ref:cm :model.sync="file"></codemirror>
+    <input type="hidden" v-model="file.$loki" />
+    <input type="text" class="titleInput" v-model="file.title"  @keydown="listenOnKeyDown($event)" />
+    <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
   <div class="preview" v-html="file.content | marked"></div>
 </template>
 
 <script>
-import File from '../common/Files.js'
+import Files from '../common/Files.js'
+import Config from '../Config.js'
 import EventBus from '../common/EventBus.js'
 import CodeMirror from './CodeMirror.vue'
 import Highlight from 'highlight.js'
@@ -19,29 +20,47 @@ export default {
 
   methods: {
     create() {
-      this.file = File.create().file
-      this.save()
+      Files.create((createdFile) => {
+        this.file = createdFile
+        EventBus.$emit('saved', this.file.$loki)
+      })
     },
 
     save () {
-      File.save(this.file)
-      EventBus.$emit('saved', this.file.id)
+      Files.save(this.file, (savedFile) => {
+        this.file = savedFile
+        EventBus.$emit('saved', this.file.$loki)
+      })
     },
 
     load (id) {
-      this.file = File.load(id).file
+      Files.load(id, (loaded) => {
+        this.file = loaded
+        this.$refs.cm.focus()
+      })
     },
 
     deleteFile (id) {
-      File.deleteFile(id)
-      if(this.file.id === id) {
-        this.file = File.openFirst().file
-      }
-      EventBus.$emit('deleted', id)
+      let loadFirst = this.file.$loki === id
+      Files.deleteFile(id, () => {
+        if(loadFirst) {
+          Files.openFirst((first) => {
+            this.file = first
+            EventBus.$emit('select', first.$loki)
+          })
+        } else {
+          EventBus.$emit('select', this.file.$loki)
+        }
+      });
     },
 
     listenOnKeyDown (e) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(this.save, Config.SAVE_INTERVAL_MS)
       if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        if (this.timer) clearTimeout(this.timer)
         e.preventDefault()
         this.save()
       }
@@ -52,12 +71,11 @@ export default {
       EventBus.$on('save', () => {this.save()})
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
-      document.addEventListener("keydown", this.listenOnKeyDown, false)
       this.create();
     }
   },
 
-  created () {
+  init () {
     marked.setOptions({
       renderer: new marked.Renderer(),
       highlight (code) {
@@ -71,7 +89,7 @@ export default {
   },
 
   data () {
-    return File.openFirst()
+    return {file:{title:'',content:''}}
   },
 
   filters: {
@@ -86,12 +104,16 @@ export default {
   .editorContainer {
     display: flex;
     flex-direction: column;
+    overflow: auto;
     width: 50%;
   }
 
   .editorContent {
     background-color: $dark-grey;
     box-shadow: $box-shadow;
+    flex: 1;
+    display: flex;
+    align-items: stretch;
   }
 
   .titleInput {
@@ -106,10 +128,12 @@ export default {
   .preview {
     margin-top: 50px;
     width: 50%;
+    overflow: auto;
     padding: 5px;
     pre {
       padding: 10px;
       color: $white;
+      white-space: pre-wrap;
       background-color: $dark-grey;
     }
   }

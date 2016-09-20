@@ -1,7 +1,5 @@
 <template>
-  <div>
-
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -17,15 +15,14 @@ export default {
   },
 
   methods: {
+
     initCodeMirror: function() {
       var vm = this
 
       vm.cm = CodeMirror.default(vm.$el, {
           mode: 'gfm',
           theme: 'monokai',
-          lineNumbers:true,
           matchBrackets: true,
-          lineWrapping: true,
           extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
       });
       vm.cm.on('change', function() {
@@ -34,21 +31,25 @@ export default {
 
       // Set the initial value
       vm.cm.setValue(vm.model.content)
-      vm.cm.idFileEdit = vm.model.id
+      vm.cm.idFileEdit = vm.model.$loki
       vm.cm.clearHistory()
 
       this.$watch('model', function(value) {
         if (value.content !== vm.cm.getValue()) {
           vm.cm.setValue(value.content)
         }
-        if (!vm.cm.idFileEdit || value.id !== vm.cm.idFileEdit) {
+        if (!vm.cm.idFileEdit || value.$loki !== vm.cm.idFileEdit) {
           vm.cm.clearHistory()
-          vm.cm.idFileEdit = value.id
+          vm.cm.idFileEdit = value.$loki
         }
       });
 
       document.addEventListener("paste", this.onPaste, true);
-      vm.cm.focus();
+      this.focus()
+    },
+
+    focus () {
+      this.cm.focus()
     },
 
     onPaste (e) {
@@ -66,6 +67,8 @@ export default {
   @import url('../../node_modules/codemirror/lib/codemirror.css');
   @import url('../../node_modules/codemirror/theme/monokai.css');
   .CodeMirror {
-    min-height: 80vh;
+    flex: 1;
+    padding: 10px;
+    height: inherit !important;
   }
 </style>

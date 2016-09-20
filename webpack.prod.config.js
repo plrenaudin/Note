@@ -12,6 +12,7 @@ plugins.push(
 );
 
 module.exports = {
+  node: config.node,
   entry: config.entry,
   output: config.output,
   plugins: plugins,
