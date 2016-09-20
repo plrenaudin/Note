@@ -1,7 +1,5 @@
 <template>
-  <div>
-
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -17,6 +15,7 @@ export default {
   },
 
   methods: {
+
     initCodeMirror: function() {
       var vm = this
 
@@ -48,7 +47,11 @@ export default {
       });
 
       document.addEventListener("paste", this.onPaste, true);
-      vm.cm.focus();
+      this.focus()
+    },
+
+    focus () {
+      this.cm.focus()
     },
 
     onPaste (e) {

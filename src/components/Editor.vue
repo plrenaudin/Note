@@ -1,8 +1,8 @@
 <template>
   <div class="editorContainer">
     <input type="hidden" v-model="file.$loki" />
-    <input type="text" class="titleInput" v-model="file.title" />
-    <codemirror class="editorContent" :model.sync="file" @keydown="listenOnKeyDown($event)"></codemirror>
+    <input type="text" class="titleInput" v-model="file.title"  @keydown="listenOnKeyDown($event)" />
+    <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
   <div class="preview" v-html="file.content | marked"></div>
 </template>
@@ -35,6 +35,7 @@ export default {
     load (id) {
       Files.load(id, (loaded) => {
         this.file = loaded
+        this.$refs.cm.focus()
       })
     },
 
