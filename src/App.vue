@@ -22,6 +22,7 @@ export default {
     display: flex;
     background-color: $white;
     align-items: stretch;
+    min-height: 100%;
     font-family: Helvetica, Arial, Sans-Serif;
   }
   a {
