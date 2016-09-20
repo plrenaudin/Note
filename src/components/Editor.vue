@@ -2,7 +2,7 @@
   <div class="editorContainer">
     <input type="hidden" v-model="file.$loki" />
     <input type="text" class="titleInput" v-model="file.title" />
-    <codemirror class="editorContent" v-ref:cm :model.sync="file"></codemirror>
+    <codemirror class="editorContent" :model.sync="file" @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
   <div class="preview" v-html="file.content | marked"></div>
 </template>
@@ -64,7 +64,6 @@ export default {
       EventBus.$on('save', () => {this.save()})
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
-      document.addEventListener("keydown", this.listenOnKeyDown, false)
       this.create();
     }
   },
