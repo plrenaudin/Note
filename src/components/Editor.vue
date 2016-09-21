@@ -49,7 +49,7 @@ export default {
             EventBus.$emit('select', first.$loki)
           })
         } else {
-            EventBus.$emit('reloadFiles')
+          EventBus.$emit('reloadFiles')
         }
       });
     },

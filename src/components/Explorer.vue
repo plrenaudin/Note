@@ -50,6 +50,7 @@ export default {
 
     EventBus.$on('select', (id) => {
       this.currentId = id
+      this.reloadItems()
     })
 
     EventBus.$on('reloadFiles', () => {
