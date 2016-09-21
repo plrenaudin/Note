@@ -23,6 +23,7 @@ export default {
           mode: 'gfm',
           theme: 'monokai',
           matchBrackets: true,
+          lineWrapping: true,
           extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
       });
       vm.cm.on('change', function() {

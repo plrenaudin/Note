@@ -1,7 +1,7 @@
 <template>
   <div class="editorContainer">
     <input type="hidden" v-model="file.$loki" />
-    <input type="text" class="titleInput" v-model="file.title"  @keydown="listenOnKeyDown($event)" />
+    <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
     <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
   <div class="preview" v-html="file.content | marked"></div>
@@ -49,7 +49,7 @@ export default {
             EventBus.$emit('select', first.$loki)
           })
         } else {
-          EventBus.$emit('select', this.file.$loki)
+            EventBus.$emit('reloadFiles')
         }
       });
     },
@@ -104,8 +104,7 @@ export default {
   .editorContainer {
     display: flex;
     flex-direction: column;
-    overflow: auto;
-    width: 50%;
+    flex: 1;
   }
 
   .editorContent {
@@ -118,7 +117,7 @@ export default {
 
   .titleInput {
     background-color: inherit;
-    border:none;
+    border: none;
     padding: 7px 0;
     font-size: 1.5em;
     height: 26px;
@@ -127,7 +126,7 @@ export default {
 
   .preview {
     margin-top: 50px;
-    width: 50%;
+    flex: 1;
     overflow: auto;
     padding: 5px;
     pre {
@@ -137,5 +136,4 @@ export default {
       background-color: $dark-grey;
     }
   }
-
 </style>
