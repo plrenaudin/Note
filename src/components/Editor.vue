@@ -4,7 +4,10 @@
     <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
     <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
-  <div class="preview" v-html="file.content | marked"></div>
+  <div class="preview">
+    <h1 class="title">Markdown Preview</h1>
+    <div v-html="file.content | marked"></div>
+  </div>
 </template>
 
 <script>
@@ -122,13 +125,21 @@ export default {
     font-size: 1.5em;
     height: 26px;
     margin: 10px 0;
+    text-align: center;
+    font-style: italic;
   }
 
   .preview {
-    margin-top: 50px;
     flex: 1;
     overflow: auto;
-    padding: 5px;
+    padding: 0 5px;
+    .title {
+      text-align: center;
+      font-weight: 100;
+      font-style: italic;
+      color: $dark-grey;
+      font-size: 1.5em;
+    }
     pre {
       padding: 10px;
       color: $white;
