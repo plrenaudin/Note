@@ -5,7 +5,7 @@ Note is a Markdown editor / previewer focused on note taking.
 * It uses [LokiJS](http://lokijs.org/) with the [indexedDB](https://developer.mozilla.org/en/docs/Web/API/IndexedDB_API) adapter
 for storing the data locally in your browser.
 * It uses [highlight.js](https://highlightjs.org/) to color syntax in code blocks.
-* It surround pasted text by code block ticks (\`\`\`)
+* It surrounds pasted text by code block ticks (\`\`\`)
 
 
 A live demo is available [here](http://note.plrenaudin.com)
