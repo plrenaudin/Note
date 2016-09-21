@@ -1,13 +1,13 @@
 <template>
   <div class="folders">
     <ul>
-      <li v-for="item in items" v-on:click="load(item.$loki)" :class="item.$loki === currentId ? 'selected' : ''">
-        <a href="#" v-on:click="deleteFile(item.$loki)">
+      <li v-for="item in items" @click="load(item.$loki)" :class="item.$loki === currentId ? 'selected' : ''">
+        <a href="#" @click.stop="deleteFile(item.$loki)">
           <i class="fa fa-trash"></i>
         </a>
         <span>{{item.title}}</span>
       </li>
-      <li><a href="#" class="add" v-on:click="create"><i class="fa fa-plus"></i></a></li>
+      <li><a href="#" class="add" @click="create"><i class="fa fa-plus"></i></a></li>
     </ul>
   </div>
 </template>
@@ -44,12 +44,16 @@ export default {
 
   created () {
     EventBus.$on('saved', (id) => {
-      this.reloadItems()
       this.currentId = id
+      this.reloadItems()
     })
 
     EventBus.$on('select', (id) => {
       this.currentId = id
+      this.reloadItems()
+    })
+
+    EventBus.$on('reloadFiles', () => {
       this.reloadItems()
     })
 

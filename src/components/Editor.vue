@@ -1,10 +1,13 @@
 <template>
   <div class="editorContainer">
     <input type="hidden" v-model="file.$loki" />
-    <input type="text" class="titleInput" v-model="file.title"  @keydown="listenOnKeyDown($event)" />
+    <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
     <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
-  <div class="preview" v-html="file.content | marked"></div>
+  <div class="preview">
+    <h1 class="title">Markdown Preview</h1>
+    <div v-html="file.content | marked"></div>
+  </div>
 </template>
 
 <script>
@@ -49,7 +52,7 @@ export default {
             EventBus.$emit('select', first.$loki)
           })
         } else {
-          EventBus.$emit('select', this.file.$loki)
+          EventBus.$emit('reloadFiles')
         }
       });
     },
@@ -104,8 +107,7 @@ export default {
   .editorContainer {
     display: flex;
     flex-direction: column;
-    overflow: auto;
-    width: 50%;
+    flex: 1;
   }
 
   .editorContent {
@@ -118,18 +120,26 @@ export default {
 
   .titleInput {
     background-color: inherit;
-    border:none;
+    border: none;
     padding: 7px 0;
     font-size: 1.5em;
     height: 26px;
     margin: 10px 0;
+    text-align: center;
+    font-style: italic;
   }
 
   .preview {
-    margin-top: 50px;
-    width: 50%;
+    flex: 1;
     overflow: auto;
-    padding: 5px;
+    padding: 0 5px;
+    .title {
+      text-align: center;
+      font-weight: 100;
+      font-style: italic;
+      color: $dark-grey;
+      font-size: 1.5em;
+    }
     pre {
       padding: 10px;
       color: $white;
@@ -137,5 +147,4 @@ export default {
       background-color: $dark-grey;
     }
   }
-
 </style>
