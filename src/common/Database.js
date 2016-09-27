@@ -1,7 +1,5 @@
-import Config from '../Config.js'
 import IndexedAdapter from 'lokijs/build/loki-indexed-adapter.min.js'
 import loki from 'lokijs'
-import EventBus from '../common/EventBus.js'
 
 const idbAdapter = new IndexedAdapter('loki')
 
@@ -9,7 +7,9 @@ var db, started, loading, entries
 
 export default {
   connect(done) {
-    if (started) return done()
+    if (started) {
+      return done()
+    }
 
     //defer callback (avoid multiple instantiations)
     if (loading) {
