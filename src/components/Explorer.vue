@@ -19,6 +19,24 @@ import Files from '../common/Files.js'
 
 export default {
   methods: {
+    initExplorer () {
+      EventBus.$on('saved', (id) => {
+        this.currentId = id
+        this.reloadItems()
+      })
+
+      EventBus.$on('select', (id) => {
+        this.currentId = id
+        this.reloadItems()
+      })
+
+      EventBus.$on('reloadFiles', () => {
+        this.reloadItems()
+      })
+
+      this.reloadItems()
+    },
+    
     load(id) {
       EventBus.$emit('load', id)
       this.currentId = id
@@ -42,22 +60,8 @@ export default {
     }
   },
 
-  created () {
-    EventBus.$on('saved', (id) => {
-      this.currentId = id
-      this.reloadItems()
-    })
-
-    EventBus.$on('select', (id) => {
-      this.currentId = id
-      this.reloadItems()
-    })
-
-    EventBus.$on('reloadFiles', () => {
-      this.reloadItems()
-    })
-
-    this.reloadItems()
+  ready () {
+    this.$nextTick(this.initExplorer);
   },
 
   data () {

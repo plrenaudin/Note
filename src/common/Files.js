@@ -8,7 +8,12 @@ export default {
           title: 'New File',
           content: ''
       }
-      cb(Database.get().insert(file))
+      var result = Database.get().find(file)
+      if (result.length < 1) {
+        cb(Database.get().insert(file))
+      } else {
+        cb(result[0])
+      }
     })
   },
 
