@@ -27,7 +27,7 @@ Here is some information if you would like to contribute to this project.
 * CodeMirror
 * VueJS
 * Webpack
-* LockiJS
+* LokiJS
 * Karma + Jasmine
 
 ## Dev setup

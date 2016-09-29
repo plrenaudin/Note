@@ -44,8 +44,8 @@ export default {
           vm.cm.idFileEdit = value.$loki
         }
       });
-
-      document.addEventListener("paste", this.onPaste, true);
+      
+      this.$el.addEventListener("paste", this.onPaste, true);
       this.focus()
     },
 
