@@ -2,12 +2,12 @@
   <div class="folders">
     <ul>
       <li v-for="item in items" @click="load(item.$loki)" :class="item.$loki === currentId ? 'selected' : ''">
-        <a href="#" @click.stop="deleteFile(item.$loki)">
+        <a href="#" class="action" @click.stop="deleteFile(item.$loki)">
           <i class="fa fa-trash"></i>
         </a>
         <span>{{item.title}}</span>
       </li>
-      <li><a href="#" class="add" @click="create"><i class="fa fa-plus"></i></a></li>
+      <li><a href="#" class="add action" @click="create"><i class="fa fa-plus"></i></a></li>
     </ul>
   </div>
 </template>
@@ -86,24 +86,38 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      
       span {
         display: inline-block;
         width: 80%;
       }
+      
+      .action:hover {
+        color: $dark-blue;
+      }
+
       .add {
         width: 100%;
         text-align: center;
       }
+      
       &:hover {
         background-color: rgba( $dark-grey, .2);
         border-radius: 5px 0 0 5px;
       }
+      
       &.selected {
         z-index: 10;
         color: $white;
         background-color: $dark-grey;
         border-radius: 5px 0 0 5px;
         box-shadow: $box-shadow;
+      }
+      &:last-child {
+        padding: 0;
+        a {
+          padding: 10px;
+        }
       }
     }
   }

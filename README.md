@@ -48,4 +48,5 @@ This is a non exhaustive list of improvements to be made:
 - [ ] Export data in the cloud
 - [ ] Improve look and feel / add animations
 - [ ] Add keyboard shortcuts
+- [ ] Use resizable panes for editor and preview
 - [ ] Improve test coverage

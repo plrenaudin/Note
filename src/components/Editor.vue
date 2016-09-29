@@ -62,6 +62,7 @@ export default {
         clearTimeout(this.timer)
       }
       this.timer = setTimeout(this.save, Config.SAVE_INTERVAL_MS)
+      // ctrl+s shortcut
       if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         if (this.timer) clearTimeout(this.timer)
         e.preventDefault()
