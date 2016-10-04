@@ -60,7 +60,7 @@ export default {
     }
   },
 
-  ready () {
+  mounted () {
     this.$nextTick(this.initExplorer);
   },
 

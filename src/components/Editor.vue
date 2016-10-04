@@ -2,11 +2,11 @@
   <div class="editorContainer">
     <input type="hidden" v-model="file.$loki" />
     <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
-    <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
+    <codemirror class="editorContent" :model="file" ref="cm" @keydown="listenOnKeyDown($event)"></codemirror>
   </div>
   <div class="preview">
     <h1 class="title">Markdown Preview</h1>
-    <div v-html="file.content | marked"></div>
+    <div v-html="preview"></div>
   </div>
 </template>
 
@@ -20,7 +20,11 @@ import marked from 'marked'
 
 export default {
   components: { 'codemirror': CodeMirror },
-
+  computed: {
+    preview() {
+      return marked(this.file.content)
+    }
+  },
   methods: {
     create() {
       Files.create((createdFile) => {
@@ -75,11 +79,15 @@ export default {
       EventBus.$on('save', () => {this.save()})
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
-      this.create();
+      this.on('content-changed', this.updateEditor)
+      this.create()
+    },
+    updateEditor () {
+      this.file = this.$refs.cm.file
     }
   },
 
-  init () {
+  beforeCreate () {
     marked.setOptions({
       renderer: new marked.Renderer(),
       highlight (code) {
@@ -88,7 +96,7 @@ export default {
     })
   },
 
-  ready () {
+  mounted () {
     this.$nextTick(this.initEditor);
   },
 
