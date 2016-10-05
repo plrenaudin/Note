@@ -10,7 +10,7 @@ const codeTag = '\n```\n'
 export default {
   props: ['model'],
 
-  mounted () {
+  created () {
     this.$nextTick(this.initCodeMirror);
   },
 
@@ -32,17 +32,16 @@ export default {
 
       // Set the initial value
       vm.cm.setValue(vm.model.content)
-      vm.cm.idFileEdit = vm.model.$loki
+      vm.idFileEdit = vm.model.$loki
       vm.cm.clearHistory()
 
       this.$watch('model', function(value) {
         if (value.content !== vm.cm.getValue()) {
           vm.cm.setValue(value.content)
-          this.$emit('content-changed')
         }
-        if (!vm.cm.idFileEdit || value.$loki !== vm.cm.idFileEdit) {
+        if (!vm.idFileEdit || value.$loki !== vm.idFileEdit) {
           vm.cm.clearHistory()
-          vm.cm.idFileEdit = value.$loki
+          vm.idFileEdit = value.$loki
         }
       });
       

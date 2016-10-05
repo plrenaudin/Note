@@ -1,12 +1,14 @@
 <template>
-  <div class="editorContainer">
-    <input type="hidden" v-model="file.$loki" />
-    <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
-    <codemirror class="editorContent" :model="file" ref="cm" @keydown="listenOnKeyDown($event)"></codemirror>
-  </div>
-  <div class="preview">
-    <h1 class="title">Markdown Preview</h1>
-    <div v-html="preview"></div>
+  <div class="editorComponent">
+    <div class="editorContainer">
+      <input type="hidden" v-model="file.$loki" />
+      <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
+      <codemirror class="editorContent" :model="file" ref="cm" @keydown="listenOnKeyDown($event)"></codemirror>
+    </div>
+    <div class="preview">
+      <h1 class="title">Markdown Preview</h1>
+      <div v-html="preview"></div>
+    </div>
   </div>
 </template>
 
@@ -27,28 +29,32 @@ export default {
   },
   methods: {
     create() {
+      let me = this
       Files.create((createdFile) => {
-        this.file = createdFile
-        EventBus.$emit('saved', this.file.$loki)
+        me.file = createdFile
+        EventBus.$emit('saved', me.file.$loki)
       })
     },
 
     save () {
-      Files.save(this.file, (savedFile) => {
-        this.file = savedFile
-        EventBus.$emit('saved', this.file.$loki)
+      let me = this
+      Files.save(me.file, (savedFile) => {
+        me.file = savedFile
+        EventBus.$emit('saved', me.file.$loki)
       })
     },
 
     load (id) {
+      let me = this
       Files.load(id, (loaded) => {
-        this.file = loaded
-        this.$refs.cm.focus()
+        me.file = loaded
+        me.$refs.cm.focus()
       })
     },
 
     deleteFile (id) {
-      let loadFirst = this.file.$loki === id
+      let me = this, 
+        loadFirst = me.file.$loki === id
       Files.deleteFile(id, () => {
         if(loadFirst) {
           Files.openFirst((first) => {
@@ -62,6 +68,7 @@ export default {
     },
 
     listenOnKeyDown (e) {
+      console.log('keydown')
       if (this.timer) {
         clearTimeout(this.timer)
       }
@@ -79,7 +86,6 @@ export default {
       EventBus.$on('save', () => {this.save()})
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
-      this.on('content-changed', this.updateEditor)
       this.create()
     },
     updateEditor () {
@@ -96,7 +102,7 @@ export default {
     })
   },
 
-  mounted () {
+  created () {
     this.$nextTick(this.initEditor);
   },
 
@@ -113,6 +119,11 @@ export default {
 <style lang="sass">
   @import '../common/styles.scss';
   @import url('../../node_modules/highlight.js/styles/monokai.css');
+  .editorComponent{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+  }
   .editorContainer {
     display: flex;
     flex-direction: column;

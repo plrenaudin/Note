@@ -3,12 +3,9 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var loaders = [
   {
-    "test": /\.js?$/,
-    "exclude": /node_modules/,
-    "loader": "babel",
-    "query": {
-      "presets": ["es2015"]
-    }
+    test: /\.js?$/,
+    loader: "babel",
+    exclude: /node_modules/
   },
   {
     "test": /\.vue?$/,
