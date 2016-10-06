@@ -16,7 +16,7 @@
 import Files from '../common/Files.js'
 import Config from '../Config.js'
 import EventBus from '../common/EventBus.js'
-import CodeMirror from './CodeMirror.vue'
+import CodeMirror from './CodeMirror.js'
 import Highlight from 'highlight.js'
 import marked from 'marked'
 
@@ -87,9 +87,6 @@ export default {
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
       this.create()
-    },
-    updateEditor () {
-      this.file = this.$refs.cm.file
     }
   },
 
@@ -119,6 +116,13 @@ export default {
 <style lang="sass">
   @import '../common/styles.scss';
   @import url('../../node_modules/highlight.js/styles/monokai.css');
+  @import url('../../node_modules/codemirror/theme/monokai.css');
+  @import url('../../node_modules/codemirror/lib/codemirror.css');
+  .CodeMirror {
+    flex: 1;
+    padding: 10px;
+    height: inherit !important;
+  }
   .editorComponent{
     display: flex;
     flex-direction: row;

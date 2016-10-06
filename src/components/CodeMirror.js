@@ -1,33 +1,31 @@
-<template>
-  <div></div>
-</template>
-
-<script>
+import Vue from 'vue'
 import EventBus from '../common/EventBus.js'
 import * as CodeMirror from 'codemirror'
 import gfm from '../../node_modules/codemirror/mode/gfm/gfm.js'
 const codeTag = '\n```\n'
-export default {
+
+export default Vue.component('codemirror', {
   props: ['model'],
 
-  created () {
+  render: h => h('div'),
+
+  created() {
     this.$nextTick(this.initCodeMirror);
   },
 
   methods: {
-
-    initCodeMirror: function() {
+    initCodeMirror: function () {
       var vm = this
 
       vm.cm = CodeMirror.default(vm.$el, {
-          mode: 'gfm',
-          theme: 'monokai',
-          matchBrackets: true,
-          lineWrapping: true,
-          extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
+        mode: 'gfm',
+        theme: 'monokai',
+        matchBrackets: true,
+        lineWrapping: true,
+        extraKeys: { "Enter": "newlineAndIndentContinueMarkdownList" }
       });
-      vm.cm.on('change', function() {
-          vm.$set(vm.model, 'content', vm.cm.getValue())
+      vm.cm.on('change', function () {
+        vm.$set(vm.model, 'content', vm.cm.getValue())
       });
 
       // Set the initial value
@@ -35,7 +33,7 @@ export default {
       vm.idFileEdit = vm.model.$loki
       vm.cm.clearHistory()
 
-      this.$watch('model', function(value) {
+      this.$watch('model', function (value) {
         if (value.content !== vm.cm.getValue()) {
           vm.cm.setValue(value.content)
         }
@@ -44,16 +42,16 @@ export default {
           vm.idFileEdit = value.$loki
         }
       });
-      
+
       this.$el.addEventListener("paste", this.onPaste, true);
       this.focus()
     },
 
-    focus () {
+    focus() {
       this.cm.focus()
     },
 
-    onPaste (e) {
+    onPaste(e) {
       e.preventDefault()
       let pastedText = e.clipboardData.getData('Text')
       if (pastedText && pastedText.trim()) {
@@ -61,15 +59,4 @@ export default {
       }
     }
   }
-}
-</script>
-
-<style>
-  @import url('../../node_modules/codemirror/lib/codemirror.css');
-  @import url('../../node_modules/codemirror/theme/monokai.css');
-  .CodeMirror {
-    flex: 1;
-    padding: 10px;
-    height: inherit !important;
-  }
-</style>
+})
