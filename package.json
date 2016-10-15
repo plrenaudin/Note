@@ -13,7 +13,7 @@
     "url": "https://github.com/plrenaudin/note.git"
   },
   "dependencies": {
-    "vue": "^2.0.1"
+    "vue": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.16.0",
@@ -37,7 +37,7 @@
     "node-sass": "^3.9.3",
     "sass-loader": "^4.0.2",
     "vue-html-loader": "^1.2.3",
-    "vue-loader": "^9.5.1",
+    "vue-loader": "^9.7.0",
     "vue-style-loader": "^1.0.0",
     "webpack": "1.13.2",
     "webpack-dev-server": "1.16.1"
