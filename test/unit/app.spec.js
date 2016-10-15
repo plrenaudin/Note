@@ -7,7 +7,7 @@ describe('App.vue', () => {
   var vm;
   beforeAll(() => {
     vm = new Vue({
-      template: '<div><app></app></div>',
+      render: h => h('app'),
       components: { App }
     }).$mount()
   });

@@ -60,8 +60,8 @@ export default {
     }
   },
 
-  ready () {
-    this.$nextTick(this.initExplorer);
+  created () {
+    this.$nextTick(this.initExplorer)
   },
 
   data () {

@@ -1,12 +1,14 @@
 <template>
-  <div class="editorContainer">
-    <input type="hidden" v-model="file.$loki" />
-    <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
-    <codemirror class="editorContent" :model.sync="file" v-ref:cm @keydown="listenOnKeyDown($event)"></codemirror>
-  </div>
-  <div class="preview">
-    <h1 class="title">Markdown Preview</h1>
-    <div v-html="file.content | marked"></div>
+  <div class="editorComponent">
+    <div class="editorContainer">
+      <input type="hidden" v-model="file.$loki" />
+      <input type="text" class="titleInput" v-model="file.title"" />
+      <codemirror class="editorContent" :model="file" ref="cm"></codemirror>
+    </div>
+    <div class="preview">
+      <h1 class="title">Markdown Preview</h1>
+      <div v-html="preview"></div>
+    </div>
   </div>
 </template>
 
@@ -14,37 +16,50 @@
 import Files from '../common/Files.js'
 import Config from '../Config.js'
 import EventBus from '../common/EventBus.js'
-import CodeMirror from './CodeMirror.vue'
+import CodeMirror from './CodeMirror.js'
 import Highlight from 'highlight.js'
 import marked from 'marked'
 
 export default {
   components: { 'codemirror': CodeMirror },
-
+  computed: {
+    preview() {
+      return marked(this.file.content)
+    }
+  },
   methods: {
     create() {
+      let me = this
       Files.create((createdFile) => {
-        this.file = createdFile
-        EventBus.$emit('saved', this.file.$loki)
+        me.file = createdFile
+        EventBus.$emit('saved', me.file.$loki)
       })
     },
 
     save () {
-      Files.save(this.file, (savedFile) => {
-        this.file = savedFile
-        EventBus.$emit('saved', this.file.$loki)
-      })
+      let me = this
+      if (me.timer) {
+        clearTimeout(me.timer)
+      }
+      me.timer = setTimeout(() => {
+        Files.save(me.file, (savedFile) => {
+          me.file = savedFile
+          EventBus.$emit('saved', me.file.$loki)
+        })
+      }, Config.SAVE_INTERVAL_MS)
     },
 
     load (id) {
+      let me = this
       Files.load(id, (loaded) => {
-        this.file = loaded
-        this.$refs.cm.focus()
+        me.file = loaded
+        me.$refs.cm.focus()
       })
     },
 
     deleteFile (id) {
-      let loadFirst = this.file.$loki === id
+      let me = this, 
+        loadFirst = me.file.$loki === id
       Files.deleteFile(id, () => {
         if(loadFirst) {
           Files.openFirst((first) => {
@@ -57,29 +72,18 @@ export default {
       });
     },
 
-    listenOnKeyDown (e) {
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-      this.timer = setTimeout(this.save, Config.SAVE_INTERVAL_MS)
-      // ctrl+s shortcut
-      if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-        if (this.timer) clearTimeout(this.timer)
-        e.preventDefault()
-        this.save()
-      }
-    },
-
     initEditor () {
       EventBus.$on('create', () => {this.create()})
       EventBus.$on('save', () => {this.save()})
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
-      this.create();
+      this.$watch('file.title', this.save)
+      this.$watch('file.content', this.save)
+      this.create()
     }
   },
 
-  init () {
+  beforeCreate () {
     marked.setOptions({
       renderer: new marked.Renderer(),
       highlight (code) {
@@ -88,7 +92,7 @@ export default {
     })
   },
 
-  ready () {
+  created () {
     this.$nextTick(this.initEditor);
   },
 
@@ -105,6 +109,18 @@ export default {
 <style lang="sass">
   @import '../common/styles.scss';
   @import url('../../node_modules/highlight.js/styles/monokai.css');
+  @import url('../../node_modules/codemirror/theme/monokai.css');
+  @import url('../../node_modules/codemirror/lib/codemirror.css');
+  .CodeMirror {
+    flex: 1;
+    padding: 10px;
+    height: inherit !important;
+  }
+  .editorComponent{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+  }
   .editorContainer {
     display: flex;
     flex-direction: column;

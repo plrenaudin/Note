@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <explorer class="explorer" name="explorer" v-ref:explorer></explorer>
-    <editor v-ref:editor></editor>
+    <explorer class="explorer" name="explorer" ref="explorer"></explorer>
+    <editor ref="editor"></editor>
   </div>
 </template>
 
