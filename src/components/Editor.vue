@@ -2,8 +2,8 @@
   <div class="editorComponent">
     <div class="editorContainer">
       <input type="hidden" v-model="file.$loki" />
-      <input type="text" class="titleInput" v-model="file.title" @keydown="listenOnKeyDown($event)" />
-      <codemirror class="editorContent" :model="file" ref="cm" @keydown="listenOnKeyDown($event)"></codemirror>
+      <input type="text" class="titleInput" v-model="file.title"" />
+      <codemirror class="editorContent" :model="file" ref="cm"></codemirror>
     </div>
     <div class="preview">
       <h1 class="title">Markdown Preview</h1>
@@ -38,10 +38,15 @@ export default {
 
     save () {
       let me = this
-      Files.save(me.file, (savedFile) => {
-        me.file = savedFile
-        EventBus.$emit('saved', me.file.$loki)
-      })
+      if (me.timer) {
+        clearTimeout(me.timer)
+      }
+      me.timer = setTimeout(() => {
+        Files.save(me.file, (savedFile) => {
+          me.file = savedFile
+          EventBus.$emit('saved', me.file.$loki)
+        })
+      }, Config.SAVE_INTERVAL_MS)
     },
 
     load (id) {
@@ -67,25 +72,13 @@ export default {
       });
     },
 
-    listenOnKeyDown (e) {
-      console.log('keydown')
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-      this.timer = setTimeout(this.save, Config.SAVE_INTERVAL_MS)
-      // ctrl+s shortcut
-      if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-        if (this.timer) clearTimeout(this.timer)
-        e.preventDefault()
-        this.save()
-      }
-    },
-
     initEditor () {
       EventBus.$on('create', () => {this.create()})
       EventBus.$on('save', () => {this.save()})
       EventBus.$on('load', (id) => {this.load(id)})
       EventBus.$on('delete', (id) => {this.deleteFile(id)})
+      this.$watch('file.title', this.save)
+      this.$watch('file.content', this.save)
       this.create()
     }
   },
