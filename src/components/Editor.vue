@@ -2,7 +2,7 @@
   <div class="editorComponent">
     <div class="editorContainer">
       <input type="hidden" v-model="file.$loki" />
-      <input type="text" class="titleInput" v-model="file.title"" />
+      <input type="text" class="titleInput" v-model="file.title" />
       <codemirror class="editorContent" :model="file" ref="cm"></codemirror>
     </div>
     <div class="preview">
