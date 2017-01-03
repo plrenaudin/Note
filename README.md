@@ -8,7 +8,7 @@ for storing the data locally in your browser.
 * It surrounds pasted text by code block ticks (\`\`\`)
 
 
-A live demo is available [here](http://note.plrenaudin.com)
+A live demo is available [here](https://plrenaudin.github.io/Note/)
 
 # Quick Start
 
